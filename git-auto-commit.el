@@ -5,13 +5,27 @@
 ;; Author: Sebastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
 ;; Keywords: emacs, configuration
 ;; Created: 2011-06-28
-;; Last changed: 2011-08-03 18:26:16
+;; Last changed: 2011-08-03 18:33:11
 ;; Licence: WTFPL, grab your copy here: http://sam.zoy.org/wtfpl/
 
 ;; This file is NOT part of GNU Emacs.
 
 ;;; Commentary:
 ;;
+;;  Configure repositories to watch:
+;;
+;;     (eval-after-load 'git-auto-commit
+;;       '(progn
+;;          (setq gac-dir-set
+;;                '("~/path/to/git"
+;;                  "~/path/to/other/important/files"))))
+;;
+;;  Initialize `gac-commit-file' in `after-save-hook'.
+;;
+;;  If you are not using autoloads, you should require git-auto-commit:
+;;    (require 'git-auto-commit nil t)
+
+
 
 (eval-when-compile (require 'files))
 (eval-when-compile (require 'timer))
