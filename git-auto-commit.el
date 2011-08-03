@@ -5,7 +5,7 @@
 ;; Author: Sebastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
 ;; Keywords: emacs, configuration
 ;; Created: 2011-06-28
-;; Last changed: 2011-08-03 18:15:24
+;; Last changed: 2011-08-03 18:26:16
 ;; Licence: WTFPL, grab your copy here: http://sam.zoy.org/wtfpl/
 
 ;; This file is NOT part of GNU Emacs.
@@ -58,7 +58,7 @@
        (lambda (dn)
 	 (let ((default-directory dn))
 	   (message (concat "Pushing git repository from  " dn))
-	   (shell-command "git push & /usr/bin/true")))
+	   (shell-command "git push & /bin/true")))
        dn)))
 
 ;;;###autoload
