@@ -5,7 +5,7 @@
 ;; Author: Sebastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
 ;; Keywords: emacs, configuration
 ;; Created: 2011-06-28
-;; Last changed: 2011-07-06 16:37:51
+;; Last changed: 2011-08-03 18:15:24
 ;; Licence: WTFPL, grab your copy here: http://sam.zoy.org/wtfpl/
 
 ;; This file is NOT part of GNU Emacs.
@@ -48,17 +48,18 @@
 		x))
 	    gac-dir-set))))
 
+
 (defun gac-schedule-push (dn)
   "Schedule a push if one is not already scheduled for the given dir."
+  (message (format "Scheduling to push %s" dn))
   (if (null (member dn gac-dir-set))
-      (progn
-	(run-with-idle-timer
-	 gac-schedule-push-delay nil
-	 (lambda (dn)
+      (run-with-idle-timer
+       gac-schedule-push-delay nil
+       (lambda (dn)
+	 (let ((default-directory dn))
 	   (message (concat "Pushing git repository from  " dn))
-	   (let ((default-directory dn))
-	     (shell-command ("git push & /usr/bin/true"))))
-	 dn))))
+	   (shell-command "git push & /usr/bin/true")))
+       dn)))
 
 ;;;###autoload
 (defun gac-commit-file ()
