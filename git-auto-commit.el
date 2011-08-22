@@ -5,7 +5,7 @@
 ;; Author: Sebastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
 ;; Keywords: emacs, configuration
 ;; Created: 2011-06-28
-;; Last changed: 2011-08-22 23:16:11
+;; Last changed: 2011-08-23 00:11:31
 ;; Licence: WTFPL, grab your copy here: http://sam.zoy.org/wtfpl/
 
 ;; This file is NOT part of GNU Emacs.
@@ -99,17 +99,17 @@ passed to `format' with the saved filename in parameter."
 		x))
 	    (gac-get-repositories)))))
 
-(defun gac-schedule-push (dn)
+(defun gac-schedule-push (dn conf)
   "Schedule a push if one is not already scheduled for the given dir."
   (message (format "Scheduling to push %s" dn))
-  (if (null (member dn (gac-get-repositories)))
-      (run-with-idle-timer
-       gac-schedule-push-delay nil
-       (lambda (dn)
-	 (let ((default-directory dn))
-	   (message "Pushing git repository from  %s" dn)
-	   (shell-command gac-default-cmd-git-push)))
-       dn)))
+  (when (member dn (gac-get-repositories))
+    (run-with-idle-timer
+     gac-schedule-push-delay nil
+     (lambda (dn conf)
+       (let ((default-directory (file-name-directory dn)))
+	 (message "Pushing git repository from  %s" dn)
+	 (shell-command (plist-get conf :cmd-git-push))))
+     dn conf)))
 
 ;;;###autoload
 (defun gac-commit-file ()
@@ -121,10 +121,13 @@ passed to `format' with the saved filename in parameter."
     (when dn
       (message "git adding %s" fn)
       (setq  rn (file-relative-name fn dn))
-      (let ((default-directory dn))
-	(shell-command (format gac-default-cmd-git-add rn))
-	(shell-command (format 
-			gac-default-cmd-git-commit rn)))
-      (gac-schedule-push dn))))
+      (let* ((default-directory dn)
+	     (dirname (directory-file-name dn))
+	     (conf (gac-get-repo-config dirname)))
+	(shell-command (format (plist-get conf :cmd-git-add) rn))
+	(shell-command (format
+			(plist-get conf :cmd-git-commit)
+			rn))
+	(gac-schedule-push dirname conf)))))
 
 (provide 'git-auto-commit)
