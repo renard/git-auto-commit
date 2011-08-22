@@ -5,7 +5,7 @@
 ;; Author: Sebastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
 ;; Keywords: emacs, configuration
 ;; Created: 2011-06-28
-;; Last changed: 2011-08-22 19:00:08
+;; Last changed: 2011-08-22 23:16:11
 ;; Licence: WTFPL, grab your copy here: http://sam.zoy.org/wtfpl/
 
 ;; This file is NOT part of GNU Emacs.
@@ -38,7 +38,7 @@
 (defcustom gac-dir-set '()
   "Set of git repositories to auto-commit using
   `gac-commit-file'."
-  :type '(repeat directory)
+  :type 'list
   :group 'git-auto-commit)
 
 (defcustom gac-schedule-push-delay 10
@@ -66,17 +66,22 @@ passed to `format' with the saved filename in parameter."
   :type 'string
   :group 'git-auto-commit)
 
-
 (defun gac-get-repositories ()
   "Extract directory list from `gac-dir-set'."
   (loop for x in gac-dir-set
-	collect (or (plist-get x :path) x)))
+	collect (car x)))
 
 (defun gac-get-repo-config (repo)
   "Extract repository configuration from `gac-dir-set'."
-  (car (loop for x in gac-dir-set
-	     when (string= repo (plist-get x :path))
-	     collect x)))
+  (let* ((repository (assoc repo gac-dir-set))
+	 (conf (copy-alist (cdr repository))))
+    (when repository
+      (loop for x in '(cmd-git-add cmd-git-commit cmd-git-push)
+	    do (setq conf
+		     (plist-put conf (intern (format ":%s" x))
+				(or (plist-get conf (intern (format ":%s" x)))
+				    (eval (intern (format "gac-default-%s" x)))))))
+      conf)))
 
 (defun gac-match-filep (f)
   "Test if file F is in a subdirectory of `gac-dir-set'."
