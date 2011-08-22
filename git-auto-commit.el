@@ -5,7 +5,7 @@
 ;; Author: Sebastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
 ;; Keywords: emacs, configuration
 ;; Created: 2011-06-28
-;; Last changed: 2011-08-22 18:42:57
+;; Last changed: 2011-08-22 18:52:09
 ;; Licence: WTFPL, grab your copy here: http://sam.zoy.org/wtfpl/
 
 ;; This file is NOT part of GNU Emacs.
@@ -67,6 +67,11 @@ passed to `format' with the saved filename in parameter."
   :group 'git-auto-commit)
 
 
+(defun gac-get-repositories ()
+  "Extract directory list from `gac-dir-set'."
+  (loop for x in gac-dir-set
+	collect (or (plist-get x :path) x)))
+
 (defun gac-match-filep (f)
   "Test if file F is in a subdirectory of `gac-dir-set'."
   (car
@@ -81,13 +86,12 @@ passed to `format' with the saved filename in parameter."
 		   (ignore-errors
 		     (string-match x (substring f 0 (length x)))))
 		x))
-	    gac-dir-set))))
-
+	    (gac-get-repositories)))))
 
 (defun gac-schedule-push (dn)
   "Schedule a push if one is not already scheduled for the given dir."
   (message (format "Scheduling to push %s" dn))
-  (if (null (member dn gac-dir-set))
+  (if (null (member dn (gac-get-repositories)))
       (run-with-idle-timer
        gac-schedule-push-delay nil
        (lambda (dn)
