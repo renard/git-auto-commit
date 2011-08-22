@@ -5,7 +5,7 @@
 ;; Author: Sebastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
 ;; Keywords: emacs, configuration
 ;; Created: 2011-06-28
-;; Last changed: 2011-08-22 18:52:09
+;; Last changed: 2011-08-22 19:00:08
 ;; Licence: WTFPL, grab your copy here: http://sam.zoy.org/wtfpl/
 
 ;; This file is NOT part of GNU Emacs.
@@ -71,6 +71,12 @@ passed to `format' with the saved filename in parameter."
   "Extract directory list from `gac-dir-set'."
   (loop for x in gac-dir-set
 	collect (or (plist-get x :path) x)))
+
+(defun gac-get-repo-config (repo)
+  "Extract repository configuration from `gac-dir-set'."
+  (car (loop for x in gac-dir-set
+	     when (string= repo (plist-get x :path))
+	     collect x)))
 
 (defun gac-match-filep (f)
   "Test if file F is in a subdirectory of `gac-dir-set'."
