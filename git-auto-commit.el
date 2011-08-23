@@ -5,7 +5,7 @@
 ;; Author: Sebastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
 ;; Keywords: emacs, configuration
 ;; Created: 2011-06-28
-;; Last changed: 2011-08-23 09:38:55
+;; Last changed: 2011-08-23 11:54:36
 ;; Licence: WTFPL, grab your copy here: http://sam.zoy.org/wtfpl/
 
 ;; This file is NOT part of GNU Emacs.
@@ -77,6 +77,7 @@ passed to `format' with the saved filename in parameter."
   (let* ((repository (assoc repo gac-dir-set))
 	 (conf (copy-alist (cdr repository))))
     (when repository
+      ;; put default values to repository if not defined.
       (loop for x in '(schedule-push-delay cmd-git-add cmd-git-commit cmd-git-push)
 	    do (setq conf
 		     (plist-put conf (intern (format ":%s" x))
