@@ -117,18 +117,15 @@ passed to `format' with the saved filename in parameter."
   "Commit file visited in current buffer."
   (interactive)
   (let* ((fn (abbreviate-file-name (buffer-file-name)))
-	 (dn (gac-match-filep fn))
-	 rn)
+	 (dn (gac-match-filep fn)))
     (when dn
       (message "git adding %s" fn)
-      (setq  rn (file-relative-name fn dn))
-      (let* ((default-directory dn)
+      (let* ((rn (file-relative-name fn dn))
+	     (default-directory dn)
 	     (dirname (directory-file-name dn))
 	     (conf (gac-get-repo-config dirname)))
 	(shell-command (format (plist-get conf :cmd-git-add) rn))
-	(shell-command (format
-			(plist-get conf :cmd-git-commit)
-			rn))
+	(shell-command (format (plist-get conf :cmd-git-commit) rn))
 	(gac-schedule-push dirname conf)))))
 
 (provide 'git-auto-commit)
