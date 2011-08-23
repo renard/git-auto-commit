@@ -5,7 +5,7 @@
 ;; Author: Sebastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
 ;; Keywords: emacs, configuration
 ;; Created: 2011-06-28
-;; Last changed: 2011-08-23 11:54:36
+;; Last changed: 2011-08-23 11:59:34
 ;; Licence: WTFPL, grab your copy here: http://sam.zoy.org/wtfpl/
 
 ;; This file is NOT part of GNU Emacs.
@@ -17,8 +17,8 @@
 ;;     (eval-after-load 'git-auto-commit
 ;;       '(progn
 ;;          (setq gac-dir-set
-;;                '("~/path/to/git"
-;;                  "~/path/to/other/important/files"))))
+;;                '(("~/path/to/git")
+;;                  ("~/path/to/other/important/files")))))
 ;;
 ;;  Initialize `gac-commit-file' in `after-save-hook'.
 ;;
@@ -38,7 +38,30 @@
 
 (defcustom gac-dir-set '()
   "Set of git repositories to auto-commit using
-  `gac-commit-file'."
+`gac-commit-file'. Each item is a repository description
+containing:
+
+  (\"/path/to/repository\" CONFIGURATION)
+
+Where CONFIGURATION is PLIST elements:
+
+:schedule-push-delay
+
+  Override `gac-default-schedule-push-delay'.
+
+:cmd-git-add
+
+  Override `gac-default-cmd-git-add'.
+
+
+:cmd-git-commit
+
+  Override `gac-default-cmd-git-commit'.
+
+:cmd-git-push
+
+  Override `gac-default-cmd-git-push'.
+"
   :type 'list
   :group 'git-auto-commit)
 
