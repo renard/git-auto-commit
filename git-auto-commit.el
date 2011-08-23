@@ -5,7 +5,7 @@
 ;; Author: Sebastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
 ;; Keywords: emacs, configuration
 ;; Created: 2011-06-28
-;; Last changed: 2011-08-23 00:11:31
+;; Last changed: 2011-08-23 09:38:55
 ;; Licence: WTFPL, grab your copy here: http://sam.zoy.org/wtfpl/
 
 ;; This file is NOT part of GNU Emacs.
@@ -42,7 +42,7 @@
   :type 'list
   :group 'git-auto-commit)
 
-(defcustom gac-schedule-push-delay 10
+(defcustom gac-default-schedule-push-delay 10
   "Idle time delay before pushing the commit."
   :type 'integer
   :group 'git-auto-commit)
@@ -77,7 +77,7 @@ passed to `format' with the saved filename in parameter."
   (let* ((repository (assoc repo gac-dir-set))
 	 (conf (copy-alist (cdr repository))))
     (when repository
-      (loop for x in '(cmd-git-add cmd-git-commit cmd-git-push)
+      (loop for x in '(schedule-push-delay cmd-git-add cmd-git-commit cmd-git-push)
 	    do (setq conf
 		     (plist-put conf (intern (format ":%s" x))
 				(or (plist-get conf (intern (format ":%s" x)))
@@ -105,7 +105,7 @@ passed to `format' with the saved filename in parameter."
   (message (format "Scheduling to push %s" dn))
   (when (member dn (gac-get-repositories))
     (run-with-idle-timer
-     gac-schedule-push-delay nil
+     (plist-get conf :schedule-push-delay) nil
      (lambda (dn conf)
        (let ((default-directory (file-name-directory dn)))
 	 (message "Pushing git repository from  %s" dn)
