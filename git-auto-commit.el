@@ -30,6 +30,7 @@
 (eval-when-compile (require 'files))
 (eval-when-compile (require 'timer))
 (eval-when-compile (require 'simple))
+(eval-when-compile (require 'cl))
 
 (defgroup git-auto-commit nil
   "Options concerning git auto commit managment."
