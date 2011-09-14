@@ -5,7 +5,7 @@
 ;; Author: Sebastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
 ;; Keywords: emacs, configuration
 ;; Created: 2011-06-28
-;; Last changed: 2011-08-23 11:59:34
+;; Last changed: 2011-09-14 23:24:38
 ;; Licence: WTFPL, grab your copy here: http://sam.zoy.org/wtfpl/
 
 ;; This file is NOT part of GNU Emacs.
@@ -131,7 +131,7 @@ passed to `format' with the saved filename in parameter."
     (run-with-idle-timer
      (plist-get conf :schedule-push-delay) nil
      (lambda (dn conf)
-       (let ((default-directory (file-name-directory dn)))
+       (let* ((default-directory (file-name-as-directory dn)))
 	 (message "Pushing git repository from  %s" dn)
 	 (shell-command (plist-get conf :cmd-git-push))))
      dn conf)))
